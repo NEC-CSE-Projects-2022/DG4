@@ -24,11 +24,15 @@ This work highlights the effectiveness of survival analysis models for predictin
 
 ## Paper Reference (Inspiration)
 👉 **[Paper Title: Deep Gated Neural Network With Self-Attention Mechanism for Survival Analysis
+
   – Author Names K.Somasekhar,Ch.Chandrika Tirumala,K.Jayamma,P.Haseena
  ](https://ieeexplore.ieee.org/document/10769011)**
 Description:
-The paper proposes a novel deep learning framework, SA-DGNet, designed to improve survival analysis by overcoming the limitations of traditional statistical models such as the Cox Proportional Hazards model. Unlike classical approaches that rely on proportional hazards assumptions and predefined statistical distributions, this model adopts a flexible deep learning strategy to capture complex, nonlinear, and time-dependent relationships in survival data.
-The key idea of the paper is to reformulate survival prediction as a time-series forecasting problem, where time is explicitly incorporated as an input variable. Instead of directly modeling hazard functions, the model estimates the probability distribution of event occurrence across time.
+
+The paper introduces a new deep learning model called SA-DGNet, which is developed to improve survival analysis. Traditional survival models like the Cox Proportional Hazards model depend on assumptions such as proportional hazards and fixed statistical distributions. These assumptions may not hold true for complex medical data. SA-DGNet overcomes these limitations by using a flexible deep learning approach that can learn nonlinear relationships and time-dependent patterns directly from the data.
+
+A key concept of the model is that survival prediction is treated as a time-series forecasting problem. Time is used as an important input to the model, allowing it to learn how risk changes over different time periods. Instead of directly modeling hazard functions like traditional methods, SA-DGNet predicts the probability of an event occurring at different time points, which provides a more dynamic and data-driven survival prediction.
+
 ---
 
 ## Our Improvement Over Existing Paper
