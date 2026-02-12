@@ -1,4 +1,3 @@
-Team Number – Project Title
 -------------------
 DG4-Predicting Breast Cancer Survival :An Approach Using Deep Learning And Machine Learning Techniques
 ---------
