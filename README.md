@@ -1,4 +1,5 @@
 Team Number – Project Title
+-------------------
 DG4-Predicting Breast Cancer Survival :An Approach Using Deep Learning And Machine Learning Techniques
 ---------
 ## Team Info
@@ -22,26 +23,49 @@ This work highlights the effectiveness of survival analysis models for predictin
 ---
 
 ## Paper Reference (Inspiration)
-👉 **[Paper Title xxxxxxxxxx
-  – Author Names xxxxxxxxxx
- ](Paper URL here)**
-Original conference/IEEE paper used as inspiration for the model.
-
+👉 **[Paper Title: Deep Gated Neural Network With Self-Attention Mechanism for Survival Analysis
+  – Author Names K.Somasekhar,Ch.Chandrika Tirumala,K.Jayamma,P.Haseena
+ ](https://ieeexplore.ieee.org/document/10769011)**
+Description:
+The paper proposes a novel deep learning framework, SA-DGNet, designed to improve survival analysis by overcoming the limitations of traditional statistical models such as the Cox Proportional Hazards model. Unlike classical approaches that rely on proportional hazards assumptions and predefined statistical distributions, this model adopts a flexible deep learning strategy to capture complex, nonlinear, and time-dependent relationships in survival data.
+The key idea of the paper is to reformulate survival prediction as a time-series forecasting problem, where time is explicitly incorporated as an input variable. Instead of directly modeling hazard functions, the model estimates the probability distribution of event occurrence across time.
 ---
 
 ## Our Improvement Over Existing Paper
-xxxxxxxxxx
+The existing reference paper mainly focuses on designing the SA-DGNet model using gated neural networks and self-attention for survival analysis. It concentrates more on the deep learning architecture and theoretical modeling of time-to-event data.
+
+In contrast, our work improves and extends the reference paper in the following simple ways:
+
+First, we focus on real clinical datasets such as breast cancer survival data. We carefully handle missing values, normalize features, and properly structure censored survival data. This makes the model more practical for real hospital data.
+
+Second, instead of evaluating only one model, we perform a comprehensive comparison between classical models (CoxPH, Random Forest Survival) and deep learning models (DeepSurv, DeepHit, SA-DGNet). This helps us understand which method works best for structured medical datasets.
+
+Third, we improve training stability by applying regularization techniques and proper hyperparameter tuning. This reduces overfitting and improves generalization.
+
+Fourth, we emphasize interpretability. Along with attention mechanisms, we also analyze feature importance and generate survival curves for risk groups. This makes the predictions easier for doctors to understand.
+
+Finally, our work builds a complete survival prediction pipeline, including data preprocessing, model training, evaluation using C-index and MAE, and risk prediction. This makes the system more practical and ready for real-world clinical use.
+
+Overall, while the reference paper focuses mainly on architectural innovation, our work improves it by making the model more stable, interpretable, well-evaluated, and suitable for real-world medical applications.
 
 ---
 
 ## About the Project
-Give a simple explanation of:
-- What your project does
-- Predicts survival time of breast cancer patients using genomic data.
-- Why it is useful
-- Helps in early prognosis, personalized treatment planning, and risk assessment.
-- General project workflow (input → processing → model → output)
-- Dataset → Preprocessing → Feature Selection → SA-DGNet Model → Survival Time Prediction
+This project focuses on predicting breast cancer survival using advanced machine learning and deep learning techniques. Survival prediction is important in healthcare because it helps doctors understand a patient’s risk level, plan treatments, and make better clinical decisions.
+
+In this work, we use the METABRIC breast cancer dataset, which contains clinical and genomic information of patients along with survival time and censoring details. The main goal is to develop a system that can accurately estimate a patient’s survival risk based on their medical features. 
+
+We implement and compare different types of survival models, including:
+
+Cox Proportional Hazards (CoxPH) – a classical statistical survival model
+
+Random Forest Survival (RFS) – a machine learning–based method
+
+Deep learning models such as DeepSurv, DeepHit, and the proposed SA-DGNet (Self-Attentive Deep Gated Network)
+
+The proposed SA-DGNet model combines gated neural networks and self-attention mechanisms to learn complex, time-dependent patterns in patient data. In addition to prediction, the system also provides interpretability, such as risk group analysis, survival curves, and feature importance, which are useful for medical understanding. 
+
+The project follows a complete pipeline: data preprocessing, model training, evaluation using survival metrics like C-index and MAE, and survival risk prediction. This makes the system not just a research model but a step toward a practical AI-based survival prediction tool for healthcare applications. 
 
 ---
 
@@ -126,6 +150,10 @@ Future Work:
 ---
 
 ## Deployment Info
-xxxxxxxxxx
+The proposed breast cancer survival prediction model was deployed using a Python-based environment to ensure easy access, testing, and integration. The trained survival models (CoxPH, Random Forest Survival, and SA-DGNet) were connected to a simple web interface where users can enter patient clinical details to obtain survival risk predictions.
+
+All data preprocessing steps, including feature normalization and encoding, are handled on the backend. The model then performs prediction and generates outputs such as risk score, survival probability, and risk group classification, which are displayed to the user along with survival insights.
+
+The system can be deployed on local servers or cloud platforms, making it suitable for real-world clinical and research environments. Tools such as Flask/Streamlit, along with Google Colab or local machines, were used for development, testing, and deployment. This setup ensures fast predictions, scalability, and user-friendly access for healthcare professionals and researchers.
 
 ---
