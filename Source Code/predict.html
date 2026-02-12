@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predict Survival</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
+body { background:#EBF5EE; color:#283044; min-height:100vh; padding-top:70px; }
+
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 14px 50px;
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.logo { font-weight: 600; font-size: 1.5rem; }
+.logo span { color: #78A1BB; }
+
+.nav-links { display: flex; gap: 30px; }
+.nav-links a {
+  text-decoration: none;
+  color: #283044;
+  font-weight: 500;
+}
+.nav-links a.active,
+.nav-links a:hover {
+  color: #78A1BB;
+  font-weight: 600;
+}
+
+.container {
+  max-width:700px;
+  margin:50px auto 80px;
+  background:#fff;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 6px 20px rgba(120,161,187,0.2);
+}
+
+h1 { text-align:center; }
+.subtitle { text-align:center; margin-bottom:30px; }
+
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+
+.input-group { display:flex; flex-direction:column; }
+
+.full-width { grid-column: 1 / -1; }
+
+label { margin-bottom:5px; font-weight:bold; }
+
+input {
+  padding:10px;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+
+button {
+  margin-top:20px;
+  width:100%;
+  padding:14px;
+  background:#2c3e50;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+button:hover { background:#34495e; }
+
+#result {
+  margin-top:30px;
+  padding:20px;
+  background:#ecf0f1;
+  border-radius:10px;
+  display:none;
+}
+
+.risk-bar {
+  width:100%;
+  height:20px;
+  background:#ddd;
+  border-radius:10px;
+  overflow:hidden;
+  margin:10px 0;
+}
+
+#riskFill {
+  height:100%;
+  width:0%;
+  background:#27ae60;
+  border-radius:10px;
+  transition:width 0.5s;
+}
+
+.graph-section {
+  max-width:700px;
+  margin:40px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 6px 20px rgba(120,161,187,0.1);
+}
+
+.pdf-btn {
+  display:block;
+  margin:20px auto;
+  padding:12px 20px;
+  background:#78A1BB;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+@media(max-width:600px){
+  .grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+  <div class="logo">Breast Cancer <span>Prediction</span></div>
+  <nav class="nav-links">
+    <a href="index.html">🏠 Home</a>
+    <a href="about.html">ℹ️ About</a>
+    <a href="predict.html" class="active">🔮 Predict</a>
+    <a href="contact.html">📞 Contact</a>
+  </nav>
+</header>
+
+
+<div class="container">
+  <h1>Predict Breast Cancer Survival</h1>
+  <p class="subtitle">Enter patient details</p>
+
+  <form id="predictForm">
+  <div class="grid">
+
+    <!-- Patient Dropdown -->
+    <div class="input-group full-width">
+      <label for="patient_id">Select Patient ID</label>
+      <select id="patient_id" required>
+        <option value="">-- Loading Patients --</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="age">Age</label>
+      <input type="number" step="any" id="age" required>
+    </div>
+
+    <div class="input-group">
+      <label for="tumor_size">Tumor Size (cm)</label>
+      <input type="number" step="0.1" id="tumor_size" required>
+    </div>
+
+    <div class="input-group">
+      <label for="lymph_nodes">Lymph Nodes</label>
+      <input type="number" id="lymph_nodes" required>
+    </div>
+
+    <div class="input-group">
+      <label for="grade">Grade</label>
+      <input type="number" id="grade" required>
+    </div>
+
+  </div>
+
+  <button type="submit">Predict</button>
+</form>
+
+  <div id="result">
+    <h2>Prediction Result</h2>
+    <p><strong>Patient ID:</strong> <span id="displayPatientId"></span></p>
+    <p>Survival Probability: <span id="probabilityValue">0%</span></p>
+    <div class="risk-bar"><div id="riskFill"></div></div>
+    <p id="riskLabel"></p>
+  </div>
+</div>
+
+<div class="graph-section">
+  <canvas id="survivalChart"></canvas>
+</div>
+
+<button class="pdf-btn" onclick="downloadPDF()">Download PDF Report</button>
+
+<script>
+const form = document.getElementById("predictForm");
+const resultDiv = document.getElementById("result");
+const probabilityValue = document.getElementById("probabilityValue");
+const riskFill = document.getElementById("riskFill");
+const riskLabel = document.getElementById("riskLabel");
+const displayPatientId = document.getElementById("displayPatientId");
+const patientDropdown = document.getElementById("patient_id");
+
+let survivalChart = null;
+
+/* ================================
+   LOAD PATIENT IDS ON PAGE LOAD
+================================= */
+window.onload = async function () {
+    try {
+        const response = await fetch("http://127.0.0.1:5000/patients");
+        const data = await response.json();
+
+        patientDropdown.innerHTML = '<option value="">-- Select Patient --</option>';
+
+        data.patients.forEach(id => {
+            const option = document.createElement("option");
+            option.value = id;
+            option.textContent = id;
+            patientDropdown.appendChild(option);
+        });
+
+    } catch (error) {
+        patientDropdown.innerHTML = '<option value="">Backend Not Running</option>';
+    }
+};
+
+
+/* ==========================================
+   AUTO FILL PATIENT DETAILS WHEN SELECTED
+=========================================== */
+patientDropdown.addEventListener("change", async function () {
+
+    const selectedId = this.value;
+    if (!selectedId) return;
+
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/patient/${selectedId}`);
+        const data = await response.json();
+
+        if (data.error) {
+            alert("Patient not found");
+            return;
+        }
+
+        document.getElementById("age").value = data.age;
+        document.getElementById("tumor_size").value = data.tumor_size;
+        document.getElementById("lymph_nodes").value = data.lymph_nodes;
+        document.getElementById("grade").value = data.grade;
+
+    } catch (error) {
+        alert("Error fetching patient data");
+    }
+});
+
+
+/* ================================
+   PREDICT
+================================= */
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const patientId = patientDropdown.value;
+
+    const payload = {
+        age: Number(document.getElementById("age").value),
+        tumor_size: Number(document.getElementById("tumor_size").value),
+        lymph_nodes: Number(document.getElementById("lymph_nodes").value),  // FIXED
+        grade: Number(document.getElementById("grade").value)
+    };
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (data.survival_probability !== undefined) {
+
+            resultDiv.style.display = "block";
+            displayPatientId.textContent = patientId;
+
+            const survival = Number(data.survival_probability);
+            const risk = 100 - survival;
+
+            probabilityValue.textContent = survival + "%";
+            riskFill.style.width = risk + "%";
+
+            if (data.risk_level === "Low") {
+                riskFill.style.background = "#2ecc71";
+                riskLabel.textContent = "Low Risk";
+            } else if (data.risk_level === "Medium") {
+                riskFill.style.background = "#f1c40f";
+                riskLabel.textContent = "Medium Risk";
+            } else {
+                riskFill.style.background = "#e74c3c";
+                riskLabel.textContent = "High Risk";
+            }
+
+            if (survivalChart) survivalChart.destroy();
+
+            survivalChart = new Chart(document.getElementById("survivalChart"), {
+                type: "bar",
+                data: {
+                    labels: ["Survival", "Risk"],
+                    datasets: [{
+                        data: [survival, risk],
+                        backgroundColor: ["#2ecc71", "#e74c3c"]
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, max: 100 }
+                    }
+                }
+            });
+        }
+
+    } catch (error) {
+        alert("Backend not reachable.");
+    }
+});
+
+
+/* ================================
+   PDF DOWNLOAD
+================================= */
+function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    pdf.text("Breast Cancer Survival Prediction Report", 20, 20);
+    pdf.text("Patient ID: " + patientDropdown.value, 20, 40);
+    pdf.text("Age: " + document.getElementById("age").value, 20, 50);
+    pdf.text("Tumor Size: " + document.getElementById("tumor_size").value, 20, 60);
+    pdf.text("Lymph Nodes: " + document.getElementById("lymph_nodes").value, 20, 70);
+    pdf.text("Grade: " + document.getElementById("grade").value, 20, 80);
+    pdf.text("Survival Probability: " + probabilityValue.textContent, 20, 100);
+    pdf.text("Risk Level: " + riskLabel.textContent, 20, 110);
+
+    pdf.save("Breast_Cancer_Report.pdf");
+}
+</script>
+
+</body>
+</html>

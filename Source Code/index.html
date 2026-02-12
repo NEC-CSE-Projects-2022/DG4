@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breast Cancer Survival Prediction</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* RESET & BASE */
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
+body { background:#EBF5EE; color:#283044; scroll-behavior:smooth; font-size:16px; min-height:100vh; padding-top:80px; }
+
+/* NAVBAR */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 14px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  z-index: 999;
+}
+.logo { font-weight: 600; font-size: 1.5rem; color: #283044; }
+.logo span { color: #78A1BB; }
+.nav-links { display: flex; gap: 30px; }
+.nav-links a { color: #283044; font-weight: 500; text-decoration: none; transition: 0.3s; }
+.nav-links a.active, .nav-links a:hover { color: #78A1BB; font-weight: 600; }
+
+/* HERO / INTRO */
+.hero { max-width:800px; margin:60px auto 40px auto; text-align:center; }
+.hero h1 { font-size:2.2rem; color:#283044; margin-bottom:15px; }
+.hero p { font-size:1.1rem; color:#34495e; line-height:1.6; margin-bottom:25px; }
+.hero .btn { display:inline-block; padding:12px 25px; background:#78A1BB; color:#fff; font-weight:600; border-radius:8px; text-decoration:none; transition:0.3s; }
+.hero .btn:hover { background:#283044; }
+
+/* SECTIONS */
+section { max-width:1050px; margin:50px auto; background:#fff; border-radius:25px; padding:40px 25px; box-shadow:0 10px 25px rgba(120,161,187,0.2); }
+section h2 { text-align:center; color:#78A1BB; margin-bottom:25px; }
+.card-container, .workflow { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px; }
+.card, .workflow-step { background:#EBF5EE; padding:20px; border-radius:15px; box-shadow:0 3px 10px rgba(120,161,187,0.12); text-align:center; }
+.card h3, .workflow-step h4 { color:#283044; font-size:1.05rem; margin-bottom:8px; font-weight:600; }
+.card p, .workflow-step p { color:#555; font-size:0.9rem; line-height:1.4; }
+.results-table { width:100%; border-collapse:collapse; margin-top:15px; }
+.results-table th, .results-table td { border:1px solid rgba(0,0,0,0.1); padding:10px; text-align:center; font-size:0.9rem; }
+.results-table th { background:#78A1BB; color:#fff; }
+.results-table tr:nth-child(even) { background:#F4F9F7; }
+
+/* FOOTER */
+footer { background:#fff; color:#283044; padding:16px; text-align:center; border-top:1px solid rgba(0,0,0,0.05); }
+
+/* RESPONSIVE */
+@media(max-width:600px) {
+  .nav-links { flex-direction:column; gap:8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo">Breast Cancer <span>Prediction</span></div>
+  <nav class="nav-links">
+    <a href="index.html" class="active">🏠 Home</a>
+    <a href="about.html">ℹ️ About</a>
+    <a href="predict.html">🔮 Predict</a>
+    <a href="contact.html">📞 Contact</a>
+  </nav>
+</header>
+
+<!-- HERO / INTRO -->
+<div class="hero">
+  <h1>Welcome to Breast Cancer Survival Prediction</h1>
+  <p>Our platform leverages advanced machine learning and deep learning models to predict breast cancer survival probability, providing interpretable and clinically actionable insights.</p>
+  <a href="predict.html" class="btn">🔮 Go to Predict Page</a>
+</div>
+
+<!-- IMPLEMENTED MODELS -->
+<section>
+  <h2>Implemented Models</h2>
+  <div class="card-container">
+    <div class="card"><h3>Cox Proportional Hazards</h3><p>Classical survival model estimating hazard ratios.</p></div>
+    <div class="card"><h3>Random Survival Forest</h3><p>Non-linear model handling high-dimensional data.</p></div>
+    <div class="card"><h3>SA-DGNet</h3><p>Deep self-attentive gated network for accurate predictions.</p></div>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section>
+  <h2>Project Workflow</h2>
+  <div class="workflow">
+    <div class="workflow-step"><h4>Data Collection</h4><p>METABRIC dataset with 1900+ samples.</p></div>
+    <div class="workflow-step"><h4>Preprocessing</h4><p>Data normalization and feature encoding.</p></div>
+    <div class="workflow-step"><h4>Model Training</h4><p>Cross-validation & hyperparameter tuning.</p></div>
+    <div class="workflow-step"><h4>Evaluation</h4><p>Compared using C-index and Kaplan-Meier analysis.</p></div>
+  </div>
+</section>
+
+<!-- EXPERIMENTAL RESULTS -->
+<section>
+  <h2>Experimental Results</h2>
+  <table class="results-table">
+    <tr><th>Model</th><th>C-index</th><th>Remarks</th></tr>
+    <tr><td>CoxPH</td><td>0.8719</td><td>Strong interpretability</td></tr>
+    <tr><td>RFS</td><td>0.8249</td><td>Robust to non-linear features</td></tr>
+    <tr><td>SA-DGNet</td><td>0.7590</td><td>Improved hazard stratification</td></tr>
+  </table>
+</section>
+
+<!-- CONCLUSION -->
+<section>
+  <h2>Conclusion</h2>
+  <p>This system integrates advanced ML & DL models for survival prediction, providing interpretable and accurate insights for clinical decision-making.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Breast Cancer Prediction | All Rights Reserved</p>
+</footer>
+
+</body>
+</html>
